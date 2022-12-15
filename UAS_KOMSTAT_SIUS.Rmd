@@ -1,0 +1,78 @@
+---
+title: "UAS KOMPUTASI STATISTIKA LANJUT"
+author: "IGNASIUS PRESDA"
+date: "2022-12-14"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=TRUE}
+#Input Library dan Dataset
+library(wordcloud)
+library(tm)
+library(textclean)
+library(tidytext)
+amazon_reviewsss <- read.csv("C:/Users/ASUS/Downloads/amazon_reviewsss.csv", sep=";", stringsAsFactors=TRUE)
+head(amazon_reviewsss)
+```
+
+```{r, include=TRUE}
+#Mengubah Data Frame Menjadi Data Vektor
+rev<- amazon_reviewsss$reviewText
+head (rev)
+```
+
+```{r, include=TRUE}
+##Text Cleaning
+#Mengubah Kapital Menjadi Huruf Kecil
+rev <- tolower(rev)
+head(rev)
+```
+```{r, include = TRUE}
+#Mengembalikan Kata yang disingkat Menjadi Kata Aslinya
+rev <- replace_contraction(rev)
+head(rev)
+```
+
+```{r, include=TRUE}
+#Mengembalikan Kata yang Mengalami Perpanjangan Menjadi Kata Aslinya
+rev <- replace_word_elongation(rev)
+head(rev)
+```
+ 
+```{r, include=TRUE}
+#Menghapus Huruf yang Bukan Kata
+rev <- strip(rev)
+head(rev)
+```
+
+```{r, include=TRUE}
+#Menghapus Beberapa Kata
+rev <-removeWords(rev, c("the","our","you","and","was","this","with","not","too","but","for",
+                         "its","who","has","what","yet","your","out","else","more",
+                         "own","are","abaut","just","because","all","etc","works","these","did","say","use","end","she","lot","can","not","for","saw","also","have","that","after",","))
+head(rev)
+```
+
+```{r, include=TRUE} 
+##Membuat Word Cloud
+#Mengubah Data Frame Menjadi Data Faktor
+tdm <- TermDocumentMatrix(rev)
+m <- as.matrix(tdm)
+v <- sort(rowSums(m),decreasing = TRUE)
+#Mengubah Data Faktor Menjadi Data Frame
+d <- data.frame(word = names(v), freq = v)
+
+wordcloud(d$word, d$freq,
+          random.order = FALSE,
+          max.words = 500,
+           colors = brewer.pal(name = "Dark2",8 )) 
+```
+
+
